@@ -1,22 +1,39 @@
 
-plot(del_t:del_t:(del_t*size_t),(data(1,:,1)-data(1,1,1))*6*10^6, ...
-    del_t:del_t:(del_t*size_t),(data(1,:,6)-data(1,1,6))*6*10^6)
+t_mem=del_t:del_t:(del_t*size_t);
 
-%plot(del_t:del_t:(del_t*size_t),data7(1,:), ...
-%    del_t:del_t:(del_t*size_t),data3(1,:))
+%plot(t_mem,(data(2,:,1)-data(2,1,1))*6*10^6, ...
+%    t_mem,(data(2,:,6)-data(2,1,6))*6*10^6)
 
-%plot(del_t:del_t:(del_t*size_t),data5(1,:))
+%plot(t_mem,(data(1,:,1)-data(1,1,1))*6*10^6,...
+%    t_mem,(data(1,:,6)-data(1,1,6))*6*10^6)
+
+%subplot(2,2,1)
+%plot(t_mem,(data_q(3,:)),...
+%    t_mem,(data_q(4,:)))
+
+%plot(t_mem,2*rad2deg(atan2(data_q(3,:),data_q(4,:))),...
+%    t_mem,rad2deg(atan2(data(2,:,3),data(1,:,3))))
+
+%plot(t_mem,data(1,:,7), ...
+%    t_mem,data(1,:,3))
+
+%subplot(2,2,2)
+%plot(t_mem,data(3,:,5))
 
 
 
 %plotting r_n trajectory
-%plot(6*10^6*(data6(1,:)-data6(1,1)),...
-%    6*10^6*(data6(2,:)-data6(2,1)));
+%subplot(2,2,3)
+plot(6*10^6*(data(1,:,1)-data(1,1,1)),6*10^6*(data(2,:,1)-data(2,1,1)),...
+    6*10^6*(data(1,:,6)-data(1,1,6)),6*10^6*(data(2,:,6)-data(2,1,6)));
 
-%plot(del_t:del_t:(del_t*size_t),data7(1,:)) %looks ok
-%plot(del_t:del_t:(del_t*size_t),data7(2,:)) %looks ok
-%plot(del_t:del_t:(del_t*size_t),data4(1,:)) %looks ok
-%plot(del_t:del_t:(del_t*size_t),data4(2,:))  %looks ok
+%plot(del_t:del_t:(del_t*size_t),data(1,:,7),...
+%    del_t:del_t:(del_t*size_t),data(2,:,7)) 
+
+
+%plot(t_mem,data(3,:,1)) %looks ok
+%plot(t_mem,data4(1,:)) %looks ok
+%plot(t_mem,data4(2,:))  %looks ok
 
 
 %{

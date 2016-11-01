@@ -1,7 +1,7 @@
-function [r_n, v_n, f_b, om_b_ib ] = intertial_data( t , r_n_0)
+function [alpha, r_n, v_n, f_b, om_b_ib ] = intertial_data( t , r_n_0)
 %INERTIAL_DATA This function generates inertial data for a given time
-%  
-
+%  written with intent of using with analytic 2D trajectory
+%persistent alpha_0;
 a=10;
 c=5;
 b=0.1;
@@ -35,13 +35,12 @@ dD=[dh 0 0 ;
     0 dh*cos(phi)-dphi*(N+h)*sin(phi) 0;
     0 0 0];
 v_n= D*dr_n;
-%using chain differentaition rule
+%using the chain differentiation rule
 dv_n= dD*dr_n + D*ddr_n;
 
-%not yet taking rotation into account
-%alpha= atan2(v_n(2),v_n(1));
-%C_b_n=rotz(rad2deg(alpha));
-C_b_n=eye(3);
+alpha= atan2(v_n(2),v_n(1));
+C_n_b=rotz(rad2deg(alpha));
+C_b_n=C_n_b';
 
 C_n_e=[-sin(phi)*cos(lam), -sin(phi)*sin(lam), cos(phi);
     -sin(lam), cos(lam), 0;
@@ -52,7 +51,8 @@ om_n_en=[dlam*cos(phi) -dphi -dlam*sin(phi)]';
 
 f_b=C_b_n*(dv_n+cross(2*om_n_ie+om_n_en,v_n)-gamma_n);
 
-om_n_bn=[0 0 0 ]'; %gimballed system in the beginning
+om_n_nb=[0 0 (dv_n(2)*v_n(1)-dv_n(1)*v_n(2))/norm(v_n)^2 ]';
+om_n_bn=-om_n_nb;
 
 om_b_ib=C_b_n*(om_n_ie+om_n_en-om_n_bn);
 

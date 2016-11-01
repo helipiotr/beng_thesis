@@ -13,21 +13,19 @@ clear
 clear functions
 tic
 r_n_traj_gen = [deg2rad(52.259) deg2rad(21.020) 144]';
-q_0=[0 0 0 1]';
+q_0=[0 0 sin(pi/4) cos(pi/4)]';
 q=q_0;
 
-size_t=6000;
-del_t = 0.01; %set hard in different integrating functions
+size_t=60000;
+del_t = 0.001; %set hard in INS_mechanisation
 
-
-
-data(:,:,1:7)=zeros(3,size_t,7);
+data(:,:,1:8)=zeros(3,size_t,8);
 data_q(:,:)=zeros(4,size_t);
 
 for i=1:size_t
     t=i*del_t;
     
-    [ r_n_ref, v_n_ref ,f_b, om_b_ib ] = intertial_data( t , r_n_traj_gen);
+    [ alpha , r_n_ref, v_n_ref ,f_b, om_b_ib ] = intertial_data( t , r_n_traj_gen);
     
     if i == 1
        r_n_0=r_n_ref;
@@ -50,6 +48,9 @@ for i=1:size_t
     data(1:3,i,5)=om_b_ib;
     data(1:3,i,6)=r_n_ref;
     data(1:3,i,7)=v_n_ref;
+    data(1,i,8)=alpha;
 end
 
 toc
+
+postpro
