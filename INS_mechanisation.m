@@ -1,5 +1,5 @@
 function [ r_n_out , v_n_out, q_out ] = ...
-    INS_mechanisation( f_b, om_b_ib, r_n_0, v_n_0, q_0)
+    INS_mechanisation( f_b, om_b_ib, r_n_0, v_n_0, q_0, del_t)
 %INS_MECHANISATION This function computes the approtriate state values 
 %   based on accelerometer and gyroscope readings 
 %   Detailed explanation goes here
@@ -19,7 +19,7 @@ else
     % hard-coded values of r_n and v_n -> they have to be changed in 
     % further versions, Warszawa 52.259 deg N, 21.020 deg E, 144 meters over
     % ellipsioid
-    %r_n_0 = [deg2rad(52.259) deg2rad(21.020) 144]';
+    r_n_traj_gen = [deg2rad(52.259) deg2rad(21.020) 144]';
     %v_n_0= [ 0 0 0]';
 
     % quaternion transformation will be used
@@ -77,8 +77,6 @@ om_b_in=C_b_n*om_n_in;
 
 %time difference assumed constant: might however be variale in later
 %stages of development
-
-del_t = 0.001; %seconds
 
 %updating values for the next iteration
 del_theta_b_nb=om_b_ib*del_t-C_b_n*(om_n_ie+om_n_en)*del_t;
