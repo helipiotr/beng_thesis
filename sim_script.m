@@ -31,9 +31,11 @@ v_gps_noise=1/sqrt(2);%noise of velocity measurement
 f_b_noise=wgn(3,size_t,acc_noise^2/del_t/2,'linear');
 om_b_ib_noise=wgn(3,size_t,gyro_noise^2/del_t/2,'linear');
 
-r_n_noise=wgn(3,size_t,r_gps_noise^2/del_t,'linear');
+%no noise in z axis: first approximation for a land vehicle
+%r_n_noise=wgn(2,size_t,r_gps_noise^2/del_t,'linear');
+%r_n_noise=[r_n_noise;zeros(1,size_t)];
 %derivation in notes
-v_n_noise=wgn(3,size_t,2*r_gps_noise^2/del_t^2,'linear');
+%v_n_noise=wgn(3,size_t,2*r_gps_noise^2/del_t^2,'linear');
 
 for i=1:size_t
     t=(i-1)*del_t;
@@ -76,6 +78,8 @@ for i=1:size_t
     data(1:3,i,6)=r_n_ref;
     data(1:3,i,7)=v_n_ref;
     data(1,i,8)=alpha;
+    data(1:3,i,11)=r_n_gps;
+    data(1:3,i,12)=v_n_gps;
 end
 
 toc

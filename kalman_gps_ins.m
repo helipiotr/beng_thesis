@@ -1,7 +1,7 @@
 function [del_r_n,del_v_n] = ... 
     kalman_gps_ins(r_n_gps, v_n_gps, r_n_ins, v_n_ins, f_b, q, del_t, ...
      acc_noise, gyro_noise, r_gps_noise, v_gps_noise)
-%UNTITLED Kalman filter for BEng diploma project
+%KALMAN_GPS_INS Kalman filter for BEng diploma project
 %   Kalman filter written for specific application of integrating INS
 %   and GPS navigation using the difference method
 
@@ -131,8 +131,8 @@ z_kplus_kplus=[(M+h)*(r_n_ins(1)-r_n_gps(1));
     v_n_ins-v_n_gps];
 
 %gps_noise
-sdev_phi=(r_gps_noise/(M+h))^2;
-sdev_lam=(r_gps_noise/((N+h)*cos(phi)))^2;
+sdev_phi=(r_gps_noise)^2;%/(M+h))^2; to match measurement transformation
+sdev_lam=(r_gps_noise)^2;%/((N+h)*cos(phi)))^2;
 sdev_h=r_gps_noise;
 
 sdev_vn = v_gps_noise^2;
