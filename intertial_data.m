@@ -2,8 +2,8 @@ function [alpha, r_n, v_n, f_b, om_b_ib ] = intertial_data( t , r_n_0)
 %INERTIAL_DATA This function generates inertial data for a given time
 %  written with intent of using with analytic 2D trajectory
 %persistent alpha_0;
-a=10;
-c=5;
+a=30;
+c=15;
 b=0.1;
 d=2*b;
 N_test=6*10^6; %test 'earth radius'

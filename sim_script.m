@@ -17,19 +17,22 @@ q_0=[0 0 sin(pi/4) cos(pi/4)]';
 q=q_0;
 
 size_t=6000;
-del_t = 0.01; 
+ins_del_t = 0.01;
+gps_del_t= 0.1;
 
 data(:,:,1:10)=zeros(3,size_t,10);
 data_q(:,:)=zeros(4,size_t);
 
-%please mind the values coded in the kalman filter
+%please mind the values coded in the Kalman filter
 acc_noise=50*10^-6*9.81;
+%acc_bias=50*10^-3*9.81;
 gyro_noise=deg2rad(10*10^-3);
 r_gps_noise=(6.7/3); %because it is 3 sigma
 v_gps_noise=1/sqrt(2);%noise of velocity measurement
 
-f_b_noise=wgn(3,size_t,acc_noise^2/del_t/2,'linear');
-om_b_ib_noise=wgn(3,size_t,gyro_noise^2/del_t/2,'linear');
+f_b_noise=wgn(3,size_t,acc_noise^2/ins_del_t/2,'linear');%+...
+%    diag(wgn(3,1,acc_bias^2))*ones(3,size_t);
+om_b_ib_noise=wgn(3,size_t,gyro_noise^2/ins_del_t/2,'linear');
 
 %no noise in z axis: first approximation for a land vehicle
 %r_n_noise=wgn(2,size_t,r_gps_noise^2/del_t,'linear');
@@ -37,8 +40,11 @@ om_b_ib_noise=wgn(3,size_t,gyro_noise^2/del_t/2,'linear');
 %derivation in notes
 %v_n_noise=wgn(3,size_t,2*r_gps_noise^2/del_t^2,'linear');
 
+GPS_acquired=0;
+kalman_correction=zeros(9,1);
+
 for i=1:size_t
-    t=(i-1)*del_t;
+    t=(i-1)*ins_del_t;
 
     [ alpha , r_n_ref, v_n_ref ,f_b, om_b_ib ] =...
         intertial_data( t , r_n_traj_gen);
@@ -46,30 +52,39 @@ for i=1:size_t
     %adding noise
     f_b=f_b+f_b_noise(1:3,i);
     om_b_ib=om_b_ib+om_b_ib_noise(1:3,i);
-    
-    r_n_gps=r_n_addnoise(r_n_ref, r_gps_noise);
-    v_n_gps=v_n_addnoise(v_n_ref, v_gps_noise, del_t);
+
     
     if i == 1
        r_n_0=r_n_ref;
        v_n_0=v_n_ref;
+       del_r_n=[0;0;0];
+       del_v_n=[0;0;0];
        data(1:3,i,1)= r_n_0;
        data(1:4,i,2)= q_0;
        data(1:3,i,3)= v_n_0;
     end
-   
-    [ r_n_ins , v_n_ins, q ] = ...
-    INS_mechanisation( f_b, om_b_ib, r_n_0, v_n_0, q_0, del_t);
     
-    [del_r_n,del_v_n] = kalman_gps_ins(r_n_gps, v_n_gps, r_n_ins,...
-        v_n_ins, f_b, q, del_t, acc_noise, gyro_noise, r_gps_noise, ...
-        v_gps_noise);
+    [ r_n_ins , v_n_ins, q ] = ...
+    INS_mechanisation( f_b, om_b_ib, r_n_0, v_n_0, q_0, ins_del_t,...
+    GPS_acquired, kalman_correction);
 
+    %we need to make sure the first correction is not taken into account
+    GPS_acquired=(mod((i-1),gps_del_t/ins_del_t)==0) & (i~=1) ;
+
+    if GPS_acquired
+        r_n_gps=r_n_addnoise(r_n_ref, r_gps_noise);
+        v_n_gps=v_n_addnoise(v_n_ref, v_gps_noise);
+
+        [kalman_correction,del_r_n,del_v_n] = kalman_gps_ins(r_n_gps,...
+            v_n_gps, r_n_ins, v_n_ins, f_b, q, ins_del_t, gps_del_t,...
+            acc_noise, gyro_noise, r_gps_noise, v_gps_noise);
+    end
+    
     if( i~= size_t )
         data(1:3,i+1,1) = r_n_ins;
         data_q(:,i+1) = q;
         data(1:3,i+1,3) = v_n_ins;
-        data(1:3,i,9) = del_r_n;
+        data(1:3,i,9) = del_r_n; %yes some data will 
         data(1:3,i,10) = del_v_n;
     end
     
@@ -78,8 +93,13 @@ for i=1:size_t
     data(1:3,i,6)=r_n_ref;
     data(1:3,i,7)=v_n_ref;
     data(1,i,8)=alpha;
-    data(1:3,i,11)=r_n_gps;
-    data(1:3,i,12)=v_n_gps;
+    if (i-1)<(gps_del_t/ins_del_t)
+        data(1:3,i,11)=r_n_ref;
+        data(1:3,i,12)=v_n_ref;
+    else
+        data(1:3,i,11)=r_n_gps;
+        data(1:3,i,12)=v_n_gps;
+    end
 end
 
 toc

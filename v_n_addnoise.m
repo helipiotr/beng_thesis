@@ -1,4 +1,4 @@
-function [ v_n_gps ] = v_n_addnoise( v_n_ref, v_gps_noise, del_t )
+function [ v_n_gps ] = v_n_addnoise( v_n_ref, v_gps_noise)
 %V_N_ADDNOISE Adds proper noise to the velocity
 %   We assume vertical velocity to be always zero (and its noise)
 

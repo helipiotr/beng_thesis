@@ -1,6 +1,6 @@
-function [del_r_n,del_v_n] = ... 
-    kalman_gps_ins(r_n_gps, v_n_gps, r_n_ins, v_n_ins, f_b, q, del_t, ...
-     acc_noise, gyro_noise, r_gps_noise, v_gps_noise)
+function [x_kplus_kplus,del_r_n,del_v_n] = ... 
+    kalman_gps_ins(r_n_gps, v_n_gps, r_n_ins, v_n_ins, f_b, q, ...
+    ins_del_t, gps_del_t, acc_noise, gyro_noise, r_gps_noise, v_gps_noise)
 %KALMAN_GPS_INS Kalman filter for BEng diploma project
 %   Kalman filter written for specific application of integrating INS
 %   and GPS navigation using the difference method
@@ -101,20 +101,21 @@ G=[zeros(3,3) zeros(3,3);
 
 %standard deviations of accelerometers and gyroscopes
 
-sdev_ax = acc_noise^2/del_t/2;
-sdev_ay = acc_noise^2/del_t/2;
-sdev_az = acc_noise^2/del_t/2;
+sdev_ax = acc_noise^2/ins_del_t/2;%*100;
+sdev_ay = acc_noise^2/ins_del_t/2;%*100;
+sdev_az = acc_noise^2/ins_del_t/2;%*100;
 
-sdev_omx = gyro_noise^2/del_t/2;
-sdev_omy = gyro_noise^2/del_t/2;
-sdev_omz = gyro_noise^2/del_t/2;
+sdev_omx = gyro_noise^2/ins_del_t/2;
+sdev_omy = gyro_noise^2/ins_del_t/2;
+sdev_omz = gyro_noise^2/ins_del_t/2;
 
 sdev_ins=[sdev_ax sdev_ay sdev_az sdev_omx sdev_omy sdev_omz];
 Q=diag(sdev_ins);
 
-Phik=eye(9,9)+F*del_t;
 
-Qk=Phik*G*Q*G'*Phik'*del_t;
+%we can scale Q, so that it trusts GPS measurements more
+%this step is still discussable
+Q=100*Q;
 
 aux=[(M+h),0,0;
     0, (N+h)*cos(phi), 0;
@@ -159,10 +160,14 @@ else
     x_k_k=x_0;
 end
 
-Fk=eye(9)+F*del_t;
+Phik=eye(9,9)+F*gps_del_t;
+
+%Fk=eye(9)+50*F*del_t;
+
+Qk=50*Phik*G*Q*G'*Phik'*gps_del_t;
 
 %State prediction covariance error matix
-P_kplus_k=Fk*P_k_k*Fk'+Qk;
+P_kplus_k=Phik*P_k_k*Phik'+Qk;
 
 %H has no index due to negligible variance
 K_kplus=P_kplus_k*H'*(H*P_kplus_k*H'+Rk)^-1;
@@ -171,8 +176,9 @@ K_kplus=P_kplus_k*H'*(H*P_kplus_k*H'+Rk)^-1;
 P_kplus_kplus=(eye(9)-K_kplus*H)*P_kplus_k;
 
 %assuming non-feedback system, to be changed later
+x_k_k=zeros(9,1);
 
-x_kplus_k=Fk*x_k_k;
+x_kplus_k=Phik*x_k_k;
 
 z_kplus_k=H*x_kplus_k;
 

@@ -1,5 +1,6 @@
 function [ r_n_out , v_n_out, q_out ] = ...
-    INS_mechanisation( f_b, om_b_ib, r_n_0, v_n_0, q_0, del_t)
+    INS_mechanisation( f_b, om_b_ib, r_n_0, v_n_0, q_0, ins_del_t,...
+    GPS_acquired, kalman_correction)
 %INS_MECHANISATION This function computes the approtriate state values 
 %   based on accelerometer and gyroscope readings 
 %   Detailed explanation goes here
@@ -19,7 +20,7 @@ else
     % hard-coded values of r_n and v_n -> they have to be changed in 
     % further versions, Warszawa 52.259 deg N, 21.020 deg E, 144 meters over
     % ellipsioid
-    r_n_traj_gen = [deg2rad(52.259) deg2rad(21.020) 144]';
+    %r_n_traj_gen = [deg2rad(52.259) deg2rad(21.020) 144]';
     %v_n_0= [ 0 0 0]';
 
     % quaternion transformation will be used
@@ -32,6 +33,23 @@ else
     
 end
 
+%correcting with values from kalman filter
+
+if GPS_acquired
+    del_r_n = kalman_correction(1:3);
+    del_v_n = kalman_correction(4:6);
+    r_n=r_n-del_r_n;
+    v_n=v_n-del_v_n;
+    eps_n=kalman_correction(7);
+    eps_e=kalman_correction(8);
+    eps_d=kalman_correction(9);
+    E=[0 -eps_d eps_e;
+        eps_d 0 -eps_n;
+        eps_e eps_n 0];
+    C_n_b=q2C(q);
+    C_n_b=(eye(3,3)+E)*C_n_b;
+    q=C2q(C_n_b);
+end
 
 %computation only: persistient values will be updated later
 
@@ -79,23 +97,23 @@ om_b_in=C_b_n*om_n_in;
 %stages of development
 
 %updating values for the next iteration
-del_theta_b_nb=om_b_ib*del_t-C_b_n*(om_n_ie+om_n_en)*del_t;
+del_theta_b_nb=om_b_ib*ins_del_t-C_b_n*(om_n_ie+om_n_en)*ins_del_t;
 del_theta_x=del_theta_b_nb(1);
 del_theta_y=del_theta_b_nb(2);
 del_theta_z=del_theta_b_nb(3);
 del_theta=norm(del_theta_b_nb);
 
-del_v_b_n=f_b*del_t;    %not explicitly stated in paper
+del_v_b_n=f_b*ins_del_t;    %not explicitly stated in paper
 sculling=[1 del_theta_z/2 -del_theta_y/2;
     -del_theta_z/2 1 del_theta_x/2;
     del_theta_y/2 -del_theta_x/2 1];
 del_v_n_f=C_n_b*sculling*del_v_b_n;
 
-del_v_n = del_v_n_f - cross((2*om_n_ie+om_n_en),v_n*del_t)+gamma_n*del_t;
+del_v_n = del_v_n_f - cross((2*om_n_ie+om_n_en),v_n*ins_del_t)+gamma_n*ins_del_t;
 v_n_new= v_n + del_v_n;
 
 
-r_n=r_n+0.5*vel2pos*(v_n_new+v_n)*del_t;
+r_n=r_n+0.5*vel2pos*(v_n_new+v_n)*ins_del_t;
 v_n=v_n_new;
 
 %There sould be inequality, however I'm not yet sure what kind of
