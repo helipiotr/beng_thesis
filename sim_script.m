@@ -18,20 +18,20 @@ q=q_0;
 
 size_t=6000;
 ins_del_t = 0.01;
-gps_del_t= 0.1;
+gps_del_t= 0.3;
 
 data(:,:,1:10)=zeros(3,size_t,10);
 data_q(:,:)=zeros(4,size_t);
 
 %please mind the values coded in the Kalman filter
 acc_noise=50*10^-6*9.81;
-%acc_bias=50*10^-3*9.81;
+acc_bias=0.1;%50*10^-3*9.81; calibrated: filter unstable with higher values
 gyro_noise=deg2rad(10*10^-3);
 r_gps_noise=(6.7/3); %because it is 3 sigma
-v_gps_noise=1/sqrt(2);%noise of velocity measurement
+v_gps_noise=0.1;%noise of velocity measurement
 
-f_b_noise=wgn(3,size_t,acc_noise^2/ins_del_t/2,'linear');%+...
-%    diag(wgn(3,1,acc_bias^2))*ones(3,size_t);
+f_b_noise=wgn(3,size_t,acc_noise^2/ins_del_t/2,'linear')+...
+    diag(wgn(3,1,acc_bias^2))*ones(3,size_t);
 om_b_ib_noise=wgn(3,size_t,gyro_noise^2/ins_del_t/2,'linear');
 
 %no noise in z axis: first approximation for a land vehicle
@@ -50,6 +50,7 @@ for i=1:size_t
         intertial_data( t , r_n_traj_gen);
     
     %adding noise
+
     f_b=f_b+f_b_noise(1:3,i);
     om_b_ib=om_b_ib+om_b_ib_noise(1:3,i);
 

@@ -115,7 +115,7 @@ Q=diag(sdev_ins);
 
 %we can scale Q, so that it trusts GPS measurements more
 %this step is still discussable
-Q=100*Q;
+Q=30*Q;
 
 aux=[(M+h),0,0;
     0, (N+h)*cos(phi), 0;
@@ -134,11 +134,11 @@ z_kplus_kplus=[(M+h)*(r_n_ins(1)-r_n_gps(1));
 %gps_noise
 sdev_phi=(r_gps_noise)^2;%/(M+h))^2; to match measurement transformation
 sdev_lam=(r_gps_noise)^2;%/((N+h)*cos(phi)))^2;
-sdev_h=r_gps_noise;
+sdev_h=r_gps_noise^2;
 
 sdev_vn = v_gps_noise^2;
 sdev_ve = v_gps_noise^2;
-sdev_vd = 0.01^2; %we are pretty certain there is no movement in the z axis
+sdev_vd = 10;%0.01^2; %we are pretty certain there is no movement in the z axis
 
 sdev_gps=[sdev_phi sdev_lam sdev_h sdev_vn sdev_ve sdev_vd];
 
@@ -164,7 +164,7 @@ Phik=eye(9,9)+F*gps_del_t;
 
 %Fk=eye(9)+50*F*del_t;
 
-Qk=50*Phik*G*Q*G'*Phik'*gps_del_t;
+Qk=Phik*G*Q*G'*Phik'*gps_del_t;
 
 %State prediction covariance error matix
 P_kplus_k=Phik*P_k_k*Phik'+Qk;
@@ -175,7 +175,6 @@ K_kplus=P_kplus_k*H'*(H*P_kplus_k*H'+Rk)^-1;
 %State estimate covariance error matix
 P_kplus_kplus=(eye(9)-K_kplus*H)*P_kplus_k;
 
-%assuming non-feedback system, to be changed later
 x_k_k=zeros(9,1);
 
 x_kplus_k=Phik*x_k_k;
@@ -194,6 +193,10 @@ x_k_k=x_kplus_kplus;
 %we output state vectors as state error
 del_r_n = x_k_k(1:3);
 del_v_n = x_k_k(4:6);
+
+%if i==100
+%    disp('ziemniak')
+%end
 
 end
 
