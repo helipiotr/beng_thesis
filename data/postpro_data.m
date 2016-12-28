@@ -3,7 +3,8 @@ tspan=size_t-1;
 
 %subplot(1,2,1)
 
-%plotting r_n trajectory
+%plotting r_n trajectory, with reference 3D
+%{
 plot3(6*10^6*(data(1,1:tspan,1)-data(1,1,1)), ... 
     6*10^6*(data(2,1:tspan,1)-data(2,1,1)), ...
     data(3,1:tspan,1)-data(3,1,1),...
@@ -11,6 +12,24 @@ plot3(6*10^6*(data(1,1:tspan,1)-data(1,1,1)), ...
     6*10^6*(data(2,1:tspan,6)-data(2,1,6)), ...
     data(3,1:tspan,6)-data(3,1,6));
 axis equal;
+%}
+
+
+%just filtered trajectory
+
+plot3(6*10^6*(data(1,1:tspan,1)-data(1,1,1)), ... 
+    6*10^6*(data(2,1:tspan,1)-data(2,1,1)), ...
+    data(3,1:tspan,1)-data(3,1,1))
+axis equal;
+
+
+%just GPS trajectory
+%{
+plot3(6*10^6*(data(1,1:tspan,6)-data(1,1,6)), ... 
+    6*10^6*(data(2,1:tspan,6)-data(2,1,6)), ...
+    data(3,1:tspan,6)-data(3,1,6));
+axis equal;
+%}
 
 %{
 plot(6*10^6*(data(1,1:tspan,1)-data(1,1,1)), ... 

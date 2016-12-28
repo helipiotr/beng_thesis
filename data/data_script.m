@@ -57,31 +57,31 @@ C_b_n_pre=rotz(rad2deg(alpha))*rotx(rad2deg(beta));
 %out1=C_b_n_pre'*a;
 
 %those transposistions may lie about the spatial orienatation
-gyro_b=(C_b_n_pre'*gyro')';
+gyro_n=(C_b_n_pre'*gyro')';
 
 
 
-acc_b=(C_b_n_pre'*acc')';
+acc_n=(C_b_n_pre'*acc')';
 
-mag_b=(C_b_n_pre'*mag')';
+mag_n=(C_b_n_pre'*mag')';
 
 for i=1:3
-mag_b(:,i)=mag_b(:,i)-0.5*(max(mag_b(:,i))+min(mag_b(:,i)));
+mag_n(:,i)=mag_n(:,i)-0.5*(max(mag_n(:,i))+min(mag_n(:,i)));
 end
 
 
 
-attitude_mag=rad2deg(atan2(mag_b(:,2),mag_b(:,1)));
+attitude_mag=rad2deg(atan2(mag_n(:,2),mag_n(:,1)));
 
 
 
 attitude_gps = fillmissing(attitude_gps,'nearest');
 
-
+%{
 subplot(2,2,1)
-plot(time,gyro_b(:,1),time,gyro_b(:,2),time,gyro_b(:,3))
+plot(time,gyro_n(:,1),time,gyro_n(:,2),time,gyro_n(:,3))
 subplot(2,2,2)
-plot(time,acc_b(:,1),time,acc_b(:,2),time,acc_b(:,3))
+plot(time,acc_n(:,1),time,acc_n(:,2),time,acc_n(:,3))
 subplot(2,2,3)
 plot(time, speed);
 subplot(2,2,4)
@@ -91,17 +91,17 @@ plot(time, attitude_mag, time,...
 figure
 scatter(10^6*6*deg2rad(long-long(1)),10^6*6*deg2rad(lat-lat(1)))
 axis equal
-
+%}
 
 time = time';
 size_t = size(time,2);
 
 %TODOwe can't use acc_b since the noise might be correlated
-f_b = acc';
+acc_b = acc';
 om_b_ib = gyro';
 r_n_gps = [deg2rad(lat') ; deg2rad(long') ; altitude_gps'];
-v_n_gps = [sin(deg2rad((attitude_gps'))).*speed';...
-    cos(deg2rad((attitude_gps'))).*speed';...
+v_n_gps = [cos(deg2rad((attitude_gps'))).*speed';...
+    sin(deg2rad((attitude_gps'))).*speed';...
     zeros(1,size_t)];
 
 data(1:3,:,6)=r_n_gps;
@@ -123,11 +123,11 @@ acc_0=(C_b_n'*acc')';
 
 mag_0=(C_b_n'*mag')';
 
-acc_noise=0.1;%0.03;
-acc_bias=0.1;%0.05;%50*10^-3*9.81;% calibrated: filter unstable with higher values
+acc_noise=0.01;%0.03;
+acc_bias=0.01;%0.05;%50*10^-3*9.81;% calibrated: filter unstable with higher values
 gyro_noise=0.01;%deg2rad(10*10^-3);
 r_gps_noise=(3/3); %because it is 3 sigma
-v_gps_noise=0.3;%noise of velocity measurement
+v_gps_noise=0.1;%noise of velocity measurement
 
 last=1;
 gps_acquired=zeros(1,size_t);

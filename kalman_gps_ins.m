@@ -1,5 +1,5 @@
 function [x_kplus_kplus,del_r_n,del_v_n] = ... 
-    kalman_gps_ins(r_n_gps, v_n_gps, r_n_ins, v_n_ins, f_b, q, ...
+    kalman_gps_ins(r_n_gps, v_n_gps, r_n_ins, v_n_ins, acc_b, q, ...
     ins_del_t, gps_del_t, acc_noise, acc_bias, gyro_noise, r_gps_noise,...
     v_gps_noise)
 %KALMAN_GPS_INS Kalman filter for BEng diploma project
@@ -90,7 +90,7 @@ Fev=[0, 1/(N+h) , 0;
     0 , -tan(phi)/(N+h), 0];
 
 C_n_b=q2C(q);
-f_n=C_n_b*f_b;
+f_n=C_n_b*acc_b;
 
 F=[Frr Frv zeros(3,3);
     Fvr Fvv skew(f_n);
@@ -117,7 +117,7 @@ Q=diag(sdev_ins);
 
 %we can scale Q, so that it trusts GPS measurements more
 %this step is still discussable
-Q=40*Q;
+%Q=5*Q;
 
 aux=[(M+h),0,0;
     0, (N+h)*cos(phi), 0;

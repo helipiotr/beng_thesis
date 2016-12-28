@@ -14,9 +14,9 @@ clear functions
 tic
 
 %generating trajectory and assigning filter values
-traj_gen %<- simulated trajectory
-%addpath(genpath('C:\Users\Piotr\Documents\Nauka\Praca In¿ynierska\data'));
-%data_script
+%traj_gen %<- simulated trajectory
+addpath(genpath('C:\Users\Piotr\Documents\Nauka\Praca In¿ynierska\data'));
+data_script
 
 data(1:3,1,1) = r_n_0;
 data_q(:,1) = q_0;
@@ -36,7 +36,7 @@ for i=1:(size_t-1)
     last_ins=time(i);
     
     [ r_n_ins , v_n_ins, q ] = ...
-    INS_mechanisation( f_b(:,i), om_b_ib(:,i), r_n_0, v_n_0, q_0, ins_del_t,...
+    INS_mechanisation( acc_b(:,i), om_b_ib(:,i), r_n_0, v_n_0, q_0, ins_del_t,...
     gps_acquired(i), kalman_correction);
 
 
@@ -50,7 +50,7 @@ for i=1:(size_t-1)
         last_gps=time(i);
         %GPS_acquired=1;
         [kalman_correction,del_r_n,del_v_n] = kalman_gps_ins(...,
-            r_n_gps(:,i+1), v_n_gps(:,i+1), r_n_ins, v_n_ins, f_b, q,...
+            r_n_gps(:,i+1), v_n_gps(:,i+1), r_n_ins, v_n_ins, acc_b, q,...
             ins_del_t, gps_del_t,acc_noise, acc_bias, gyro_noise,...
             r_gps_noise, v_gps_noise);
     end
@@ -75,5 +75,5 @@ for i=1:(size_t-1)
 end
 
 toc
-postpro
-%postpro_data
+%postpro
+postpro_data

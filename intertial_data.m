@@ -1,4 +1,4 @@
-function [alpha, r_n, v_n, f_b, om_b_ib ] = intertial_data( t , r_n_0)
+function [alpha, r_n, v_n, acc_b, om_b_ib ] = intertial_data( t , r_n_0)
 %INERTIAL_DATA This function generates inertial data for a given time
 %  written with intent of using with analytic 2D trajectory
 %persistent alpha_0;
@@ -49,7 +49,7 @@ C_n_e=[-sin(phi)*cos(lam), -sin(phi)*sin(lam), cos(phi);
 om_n_ie=C_n_e*om_e_ie;
 om_n_en=[dlam*cos(phi) -dphi -dlam*sin(phi)]';
 
-f_b=C_b_n*(-dv_n+cross(2*om_n_ie+om_n_en,v_n)+gamma_n);
+acc_b=C_b_n*(-dv_n+cross(2*om_n_ie+om_n_en,v_n)+gamma_n);
 
 om_n_nb=[0 0 (dv_n(2)*v_n(1)-dv_n(1)*v_n(2))/norm(v_n)^2 ]';
 om_n_bn=-om_n_nb;

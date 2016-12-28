@@ -1,5 +1,5 @@
 function [ r_n_out , v_n_out, q_out ] = ...
-    INS_mechanisation( f_b, om_b_ib, r_n_0, v_n_0, q_0, ins_del_t,...
+    INS_mechanisation( acc_b, om_b_ib, r_n_0, v_n_0, q_0, ins_del_t,...
     GPS_acquired, kalman_correction)
 %INS_MECHANISATION This function computes the approtriate state values 
 %   based on accelerometer and gyroscope readings 
@@ -105,13 +105,13 @@ del_theta_y=del_theta_b_nb(2);
 del_theta_z=del_theta_b_nb(3);
 del_theta=norm(del_theta_b_nb);
 
-del_v_b_n=f_b*ins_del_t;    %not explicitly stated in paper
+del_v_b_n=-acc_b*ins_del_t;    %not explicitly stated in paper
 sculling=[1 del_theta_z/2 -del_theta_y/2;
     -del_theta_z/2 1 del_theta_x/2;
     del_theta_y/2 -del_theta_x/2 1];
 del_v_n_f=C_n_b*sculling*del_v_b_n;
 
-del_v_n = del_v_n_f - cross((2*om_n_ie+om_n_en),v_n*ins_del_t)-gamma_n*ins_del_t;
+del_v_n = del_v_n_f - cross((2*om_n_ie+om_n_en),v_n*ins_del_t) + gamma_n*ins_del_t;
 v_n_new= v_n + del_v_n;
 
 
