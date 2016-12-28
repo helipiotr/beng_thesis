@@ -40,6 +40,7 @@ if GPS_acquired
     del_v_n = kalman_correction(4:6);
     r_n=r_n-del_r_n;
     v_n=v_n-del_v_n;
+    %{
     eps_n=kalman_correction(7);
     eps_e=kalman_correction(8);
     eps_d=kalman_correction(9);
@@ -49,6 +50,7 @@ if GPS_acquired
     C_n_b=q2C(q);
     C_n_b=(eye(3,3)+E)*C_n_b;
     q=C2q(C_n_b);
+    %}
 end
 
 %computation only: persistient values will be updated later
@@ -109,7 +111,7 @@ sculling=[1 del_theta_z/2 -del_theta_y/2;
     del_theta_y/2 -del_theta_x/2 1];
 del_v_n_f=C_n_b*sculling*del_v_b_n;
 
-del_v_n = del_v_n_f - cross((2*om_n_ie+om_n_en),v_n*ins_del_t)+gamma_n*ins_del_t;
+del_v_n = del_v_n_f - cross((2*om_n_ie+om_n_en),v_n*ins_del_t)-gamma_n*ins_del_t;
 v_n_new= v_n + del_v_n;
 
 
@@ -121,7 +123,7 @@ if(del_theta~=0)
     s=2/del_theta*sin(del_theta/2);
     c=2*(cos(del_theta/2)-1);
 
-    %something was odd here in the last line stated in paper : corrected
+    %something was odd here in the last line state d in paper : corrected
     q_del_theta_mat=[c s*del_theta_z -s*del_theta_y s*del_theta_x;
         -s*del_theta_z c s*del_theta_x s*del_theta_y;
         s*del_theta_y -s*del_theta_x c s*del_theta_z;
@@ -137,6 +139,10 @@ r_n_out=r_n;
 v_n_out=v_n;
 q_out=q; %normalisation
 
+
+if abs(v_n(3))>1
+%   disp('ziemniak') 
+end
 
 
 end

@@ -1,6 +1,7 @@
 function [x_kplus_kplus,del_r_n,del_v_n] = ... 
     kalman_gps_ins(r_n_gps, v_n_gps, r_n_ins, v_n_ins, f_b, q, ...
-    ins_del_t, gps_del_t, acc_noise, gyro_noise, r_gps_noise, v_gps_noise)
+    ins_del_t, gps_del_t, acc_noise, acc_bias, gyro_noise, r_gps_noise,...
+    v_gps_noise)
 %KALMAN_GPS_INS Kalman filter for BEng diploma project
 %   Kalman filter written for specific application of integrating INS
 %   and GPS navigation using the difference method
@@ -108,14 +109,15 @@ sdev_az = acc_noise^2/ins_del_t/2;%*100;
 sdev_omx = gyro_noise^2/ins_del_t/2;
 sdev_omy = gyro_noise^2/ins_del_t/2;
 sdev_omz = gyro_noise^2/ins_del_t/2;
-
-sdev_ins=[sdev_ax sdev_ay sdev_az sdev_omx sdev_omy sdev_omz];
+%
+sdev_ins=[sdev_ax+acc_bias^2 sdev_ay+acc_bias^2 sdev_az+acc_bias^2 ...
+    sdev_omx sdev_omy sdev_omz];
 Q=diag(sdev_ins);
 
 
 %we can scale Q, so that it trusts GPS measurements more
 %this step is still discussable
-Q=30*Q;
+Q=40*Q;
 
 aux=[(M+h),0,0;
     0, (N+h)*cos(phi), 0;
@@ -132,13 +134,13 @@ z_kplus_kplus=[(M+h)*(r_n_ins(1)-r_n_gps(1));
     v_n_ins-v_n_gps];
 
 %gps_noise
-sdev_phi=(r_gps_noise)^2;%/(M+h))^2; to match measurement transformation
-sdev_lam=(r_gps_noise)^2;%/((N+h)*cos(phi)))^2;
+sdev_phi=(r_gps_noise)^2;%/(M+h)^2;% to match measurement transformation
+sdev_lam=(r_gps_noise)^2;%/((N+h)*cos(phi))^2;
 sdev_h=r_gps_noise^2;
 
 sdev_vn = v_gps_noise^2;
 sdev_ve = v_gps_noise^2;
-sdev_vd = 10;%0.01^2; %we are pretty certain there is no movement in the z axis
+sdev_vd = v_gps_noise^2; %we are pretty certain there is no movement in the z axis
 
 sdev_gps=[sdev_phi sdev_lam sdev_h sdev_vn sdev_ve sdev_vd];
 
@@ -187,6 +189,14 @@ x_kplus_kplus=x_kplus_k+K_kplus*del_z_kplus_k;
 
 %assigning persistent values fo next iteration
 
+%if i==100
+%    disp('ziemniak')
+%end
+
+%if abs(vd)>1
+%   disp(i) 
+%end
+
 P_k_k=P_kplus_kplus;
 x_k_k=x_kplus_kplus;
 
@@ -194,9 +204,7 @@ x_k_k=x_kplus_kplus;
 del_r_n = x_k_k(1:3);
 del_v_n = x_k_k(4:6);
 
-%if i==100
-%    disp('ziemniak')
-%end
+
 
 end
 
