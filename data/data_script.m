@@ -127,7 +127,7 @@ acc_noise=0.01;%0.03;
 acc_bias=0.01;%0.05;%50*10^-3*9.81;% calibrated: filter unstable with higher values
 gyro_noise=0.01;%deg2rad(10*10^-3);
 r_gps_noise=(3/3); %because it is 3 sigma
-v_gps_noise=0.1;%noise of velocity measurement
+v_gps_noise=0.5;%noise of velocity measurement
 
 last=1;
 gps_acquired=zeros(1,size_t);

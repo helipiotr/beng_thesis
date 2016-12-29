@@ -61,6 +61,7 @@ for i=1:(size_t-1)
         data(1:3,i+1,3) = v_n_ins;
         data(1:3,i,9) = del_r_n; %yes some data will 
         data(1:3,i,10) = del_v_n;
+        data(1:3,i,11) = kalman_correction(7:9);%del_eps
     end
     
     %{

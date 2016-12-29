@@ -90,7 +90,7 @@ Fev=[0, 1/(N+h) , 0;
     0 , -tan(phi)/(N+h), 0];
 
 C_n_b=q2C(q);
-f_n=C_n_b*acc_b;
+f_n=-C_n_b*acc_b;
 
 F=[Frr Frv zeros(3,3);
     Fvr Fvv skew(f_n);
@@ -117,7 +117,7 @@ Q=diag(sdev_ins);
 
 %we can scale Q, so that it trusts GPS measurements more
 %this step is still discussable
-%Q=5*Q;
+%Q=50*Q;
 
 aux=[(M+h),0,0;
     0, (N+h)*cos(phi), 0;
