@@ -1,7 +1,7 @@
 %time = ins_del_t:ins_del_t:(ins_del_t*(size_t-1));
 
-%tspan=size_t-1;
-tspan=2000;
+tspan=size_t-1;
+%tspan=2000;
 
 %subplot(1,2,1)
 

@@ -130,12 +130,25 @@ r_gps_noise=(3/3); %because it is 3 sigma
 v_gps_noise=0.5;%noise of velocity measurement
 
 last=1;
-gps_acquired=zeros(1,size_t);
+gps_acquired=[];%=zeros(1,size_t);
 for i = 1:size_t
     if ~strcmp(import(i+1,32),import(i,32)) && (i > last+5 )
        last=i;
-       gps_acquired(i)=1;
+       gps_acquired=[gps_acquired i];
     end
 end
+
+start_list = 324;
+stop_list = [550 729 1134 1673 2357 2532 2849];
+resume_list = [595 765 1162 1720 2374 2546 2875];
+
+
+
+
+
+
+
+
+
 
 

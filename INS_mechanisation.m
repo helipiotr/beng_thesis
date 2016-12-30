@@ -1,6 +1,6 @@
 function [ r_n_out , v_n_out, q_out ] = ...
     INS_mechanisation( acc_b, om_b_ib, r_n_0, v_n_0, q_0, ins_del_t,...
-    GPS_acquired, kalman_correction)
+    GPS_acquired, kalman_correction, op_mode)
 %INS_MECHANISATION This function computes the approtriate state values 
 %   based on accelerometer and gyroscope readings 
 %   Detailed explanation goes here
@@ -9,32 +9,33 @@ persistent i; %variable counting run number
 persistent r_n;
 persistent v_n;
 persistent q;
-
+persistent op_stopped;
 
 if( isempty(i) == 0)
     i=i+1;
 else
-
     i=0;
-    % REMOVE IN FURTHER VERSIONS
-    % hard-coded values of r_n and v_n -> they have to be changed in 
-    % further versions, Warszawa 52.259 deg N, 21.020 deg E, 144 meters over
-    % ellipsioid
-    %r_n_traj_gen = [deg2rad(52.259) deg2rad(21.020) 144]';
-    %v_n_0= [ 0 0 0]';
-
-    % quaternion transformation will be used
-
-    %q_0=[0 0 0 1]';
-    
+    op_stopped = 1;
     r_n=r_n_0;
     v_n=v_n_0;
     q=q_0;
-    
+end
+
+if op_mode == 1
+    r_n=r_n_0;
+    v_n=v_n_0;
+    q=q_0;
+    op_stopped = 0;
+elseif op_mode == 2
+    v_n = [0 0 0 ]';
+    op_stopped = 1;
+elseif op_mode == 3
+    q = q_0;
+    op_stopped = 0;
 end
 
 %correcting with values from kalman filter
-
+if op_stopped == 0
 if GPS_acquired
     del_r_n = kalman_correction(1:3);
     del_v_n = kalman_correction(4:6);
@@ -135,14 +136,12 @@ else
     disp('del_theta yields zero, something might have gone wrong')
 end
 
+end
+
 r_n_out=r_n;
 v_n_out=v_n;
 q_out=q; %normalisation
 
-
-if abs(v_n(3))>1
-%   disp('ziemniak') 
-end
 
 
 end

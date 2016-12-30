@@ -35,18 +35,37 @@ for i=1:(size_t-1)
     ins_del_t = (time(i)-last_ins);
     last_ins=time(i);
     
+    if ~isempty( find( start_list == i, 1) )
+        op_mode = 1; %start;
+    elseif ~isempty( find( stop_list == i, 1 ) )
+        op_mode = 2; %stop;
+    elseif ~isempty( find( resume_list == i, 1 ) )
+        op_mode = 3; %resume;
+    else
+        op_mode = 4; %normal operation
+    end
+    
+    if op_mode == 3
+        a=acc_b(1:3,i);
+        a=a/norm(a); 
+        beta=acos(a(3));
+        alpha=atan2(a(1),-a(2));
+        C_b_n=rotz(rad2deg(alpha))*rotx(rad2deg(beta))*rotz(-attitude_mag(i));
+        C_n_b=C_b_n';
+        q_0 = C2q(C_n_b);
+        clear alpha beta C_b_n C_n_b a;
+    end
+    
     [ r_n_ins , v_n_ins, q ] = ...
     INS_mechanisation( acc_b(:,i), om_b_ib(:,i), r_n_0, v_n_0, q_0, ins_del_t,...
-    gps_acquired(i), kalman_correction);
-
+    ~isempty(find(gps_acquired==(i),1)), kalman_correction, op_mode);
 
     %GPS_acquired=0;
     %we need to make sure the first correction is not taken into account
     %GPS_acquired=(mod((i-1),gps_del_t/ins_del_t)==0) & (i~=1) ;
 
-    if gps_acquired(i+1)%r_n_gps(:,i+1)~=r_n_gps(:,i)
+    if ~isempty(find(gps_acquired==(i+1),1))
         gps_del_t = (time(i)-last_gps);
-        %debug=[debug gps_del_t];
         last_gps=time(i);
         %GPS_acquired=1;
         [kalman_correction,del_r_n,del_v_n] = kalman_gps_ins(...,
