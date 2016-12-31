@@ -40,7 +40,6 @@ if GPS_acquired
     del_v_n = kalman_correction(4:6);
     r_n=r_n-del_r_n;
     v_n=v_n-del_v_n;
-
     eps_n=kalman_correction(7);
     eps_e=kalman_correction(8);
     eps_d=kalman_correction(9);
@@ -50,7 +49,6 @@ if GPS_acquired
     C_n_b=q2C(q);
     C_n_b=(eye(3,3)+E)*C_n_b;
     q=C2q(C_n_b);
-
 end
 
 %computation only: persistient values will be updated later

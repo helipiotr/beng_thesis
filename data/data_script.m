@@ -124,8 +124,8 @@ acc_0=(C_b_n'*acc')';
 mag_0=(C_b_n'*mag')';
 
 acc_noise=0.01;%0.03;
-acc_bias=0.01;%0.05;%50*10^-3*9.81;% calibrated: filter unstable with higher values
-gyro_noise=0.01;%deg2rad(10*10^-3);
+acc_bias=0.05;%0.05;%50*10^-3*9.81;% calibrated: filter unstable with higher values
+gyro_noise=0.001;%deg2rad(10*10^-3);
 r_gps_noise=(3/3); %because it is 3 sigma
 v_gps_noise=0.5;%noise of velocity measurement
 

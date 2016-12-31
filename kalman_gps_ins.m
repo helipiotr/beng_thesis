@@ -83,7 +83,7 @@ Fvv=[vd/(M+h), -2*om_e*sin(phi)-2*ve*tan(phi)/(N+h), vn/(M+h);
 
 Fer=[ -om_e*sin(phi), 0, -ve/(N+h)^2;
     0 , 0 , vn/(M+h)^2;
-    -om_e*cos(phi) - ve/((N+h)*cos(phi)^2), 0 , ve*tan(phi)/(N+h)];
+    -om_e*cos(phi) - ve/((N+h)*cos(phi)^2), 0 , ve*tan(phi)/(N+h)^2];
 
 Fev=[0, 1/(N+h) , 0;
     -1/(M+h), 0 , 0;
@@ -117,7 +117,7 @@ Q=diag(sdev_ins);
 
 %we can scale Q, so that it trusts GPS measurements more
 %this step is still discussable
-%Q=50*Q;
+Q=40*Q;
 
 aux=[(M+h),0,0;
     0, (N+h)*cos(phi), 0;
@@ -155,7 +155,7 @@ else
     i=0;
     %We assume the initial orientation is well known
     P_0=diag([sdev_phi sdev_lam sdev_h ...
-        sdev_vn sdev_ve 0.01 0.01 0.01 0.01]);
+        sdev_vn sdev_ve sdev_vd 0.01 0.01 0.01]);
     P_k_k=P_0;
     %Kalman filter state vector
     x_0=zeros(9,1);
