@@ -1,3 +1,8 @@
+%CALIBRATION_SCRIPT This script computes the coefficients necessary to correct the data
+%	The correction applies only for the accelerometers. It requires nine static 
+%	captured positions, corrects the scale and bias of each of three accelerometers
+
+
 %disp('importing data');
 load('calibration.mat')
 %calibration=import_data_cal('calibration.csv');
@@ -17,8 +22,9 @@ gyro(:,3) = cell2mat(calibration(2:size(calibration,1),12));
 
 %plot(time,gyro(:,1),time,gyro(:,2),time,gyro(:,3))
 
-subplot(2,1,1)
+%subplot(2,1,1)
 plot(sqrt(acc(:,1).^2+acc(:,2).^2+acc(:,3).^2))
+hold on
 %subplot(1,2,2);
 %plot(time,gyro_x,time,gyro_y,time,gyro_z)
 
@@ -70,7 +76,7 @@ for i=1:3
     acc(:,i)=acc(:,i)/(1+x(i+3));
 end
 
-subplot(2,1,2)
+%subplot(2,1,2)
 plot(sqrt(acc(:,1).^2+acc(:,2).^2+acc(:,3).^2))
 
 

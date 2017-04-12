@@ -1,9 +1,18 @@
-# beng_thesis
+# Bachelor Thesis (beng_thesis)
+
 My bachelor thesis project: Kalman filtering in INS &amp; GPS navigation
-The aim of this project is to create a working Kalman filter capable of using raw data to calculate estimated trajectory. 
-The current roadmap is:
-1. Create a working INS module (gyro &amp; linear accelerometer)
-2. Test its immunity to noise
-3. Develop a Kalman filter and test it with ideal GPS dataseed: add noise in the further tests.
-4. Use data collected from a smartphone / high precision IMU to validate the design
-5. Further development: magnetometer, bias / orthogonality correction
+
+# Use
+Use Matlab and just run sim_script, it refers to all functions required to operate the progamme properly.
+
+# Features
+
+ - Use real-life or simulated data
+ - Acceleration sensor calibration
+ - Inertial navigation system 
+ - Kalman filter 
+ 
+# Additional documentation
+
+Please refer to http://www.ucalgary.ca/engo_webdocs/NES/01.20156.EHShin.pdf
+

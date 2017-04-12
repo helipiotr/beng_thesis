@@ -1,3 +1,7 @@
+% SIM_SCRIPT main computation / simulation file
+%	This script can be used with either simulated or acquired data
+
+
 % variable format
 % om_b_ei - angular velocity om described in reference frame b(ody) 
 % measuring the angular speed between e(arth) and i(nertial) framess 
@@ -13,11 +17,14 @@ clear
 clear functions
 tic
 
-%generating trajectory and assigning filter values
-%traj_gen %<- simulated trajectory
+%use simulated data (8-like trajectory)
+%traj_gen 
+
+%use acquired (real-life) data
 addpath(genpath('C:\Users\Piotr\Documents\Nauka\Praca In¿ynierska\data'));
 data_script
 
+%assign initial values
 data(1:3,1,1) = r_n_0;
 data_q(:,1) = q_0;
 data(1:3,1,3) = v_n_0;
@@ -61,16 +68,18 @@ for i=1:(size_t-1)
         data(1:3,i+1,3) = v_n_ins;
         data(1:3,i,9) = del_r_n; %yes some data will 
         data(1:3,i,10) = del_v_n;
-        data(1:3,i,11) = kalman_correction(7:9);%del_eps
+        %data(1:3,i,11) = kalman_correction(7:9);%del_eps
     end
+    
+    data(1:3,i,11)=r_n_gps(:,i+1);
+    data(1:3,i,12)=v_n_gps(:,i+1);
     
     %{
     if (i-1)<(gps_del_t/ins_del_t)
         data(1:3,i,11)=r_n_ref(:,i+1);
         data(1:3,i,12)=v_n_ref(:,i+1);
     else
-        data(1:3,i,11)=r_n_gps(:,i+1);
-        data(1:3,i,12)=v_n_gps(:,i+1);
+
     end
     %}
 end

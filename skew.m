@@ -1,6 +1,5 @@
 function [ M ] = skew( v )
-%UNTITLED Summary of this function goes here
-%   Detailed explanation goes here
+%SKEW This function computes the skew matrix of a vector
 M=[0 -v(1) v(2);
     v(3) 0 -v(1);
     -v(2) v(1) 0];

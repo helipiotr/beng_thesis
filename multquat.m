@@ -1,6 +1,7 @@
 function [ prod ] = multquat( q, p )
-%MULTQUAT Summary of this function goes here
-%   Detailed explanation goes here
+%MULTQUAT Quaterion multiplication function
+%   Basic quaternion multiplication scheme required for 
+%	operations in other functions of this programme
 
 a=q(1); 
 b=q(2);

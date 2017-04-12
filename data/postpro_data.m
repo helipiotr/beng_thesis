@@ -3,7 +3,6 @@
 tspan=size_t-1;
 %tspan=1275;
 %tspan=2400;
-
 %subplot(1,2,1)
 
 %plotting r_n trajectory, with reference 3D

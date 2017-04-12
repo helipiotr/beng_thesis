@@ -1,9 +1,10 @@
 function [ r_n_out , v_n_out, q_out ] = ...
     INS_mechanisation( acc_b, om_b_ib, r_n_0, v_n_0, q_0, ins_del_t,...
     GPS_acquired, kalman_correction)
-%INS_MECHANISATION This function computes the approtriate state values 
+%INS_MECHANISATION This function computes the appropriate state values 
 %   based on accelerometer and gyroscope readings 
-%   Detailed explanation goes here
+%   This function takes acceleration, gyroscope readings and returns next 
+%	position, velocity and orientation quaterion (q_out)
 
 persistent i; %variable counting run number
 persistent r_n;
@@ -49,6 +50,7 @@ if GPS_acquired
     C_n_b=q2C(q);
     C_n_b=(eye(3,3)+E)*C_n_b;
     q=C2q(C_n_b);
+
 end
 
 %computation only: persistient values will be updated later

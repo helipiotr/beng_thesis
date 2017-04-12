@@ -112,6 +112,13 @@ sdev_omz = gyro_noise^2/ins_del_t/2;
 %
 sdev_ins=[sdev_ax+acc_bias^2 sdev_ay+acc_bias^2 sdev_az+acc_bias^2 ...
     sdev_omx sdev_omy sdev_omz];
+
+%sdev_ins=[6.04*10^-5 1.02*10^-4 2.63*10^-4 ...
+%    7.5*10^-5 1.31*10^-7 1.14*10^-7];
+
+
+%sdev_ins=[0.0016 0.0032 0.0109...
+%    1.13*10^-6 5.225*10^-6 3.5192*10^-6];
 Q=diag(sdev_ins);
 
 

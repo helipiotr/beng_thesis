@@ -1,5 +1,5 @@
 function [ C_n_b ] = q2C( q )
-%q2C functions takes a quaternion and returns the matrix that can be used 
+%q2C Function takes a quaternion and returns the matrix that can be used 
 %   to express vectors in the main reference frame
 
 q1=q(1);

@@ -1,3 +1,8 @@
+% DATA_SCRIPT Function loading data into the programe
+%	This function also calibrates the acquired data using calibration 
+%	results. It also assignes start orientation, and estimated noise values
+
+
 clear
 
 %disp('importing data');
@@ -77,7 +82,7 @@ attitude_mag=rad2deg(atan2(mag_n(:,2),mag_n(:,1)));
 
 attitude_gps = fillmissing(attitude_gps,'nearest');
 
-%{
+
 subplot(2,2,1)
 plot(time,gyro_n(:,1),time,gyro_n(:,2),time,gyro_n(:,3))
 subplot(2,2,2)
@@ -91,7 +96,6 @@ plot(time, attitude_mag, time,...
 figure
 scatter(10^6*6*deg2rad(long-long(1)),10^6*6*deg2rad(lat-lat(1)))
 axis equal
-%}
 
 time = time';
 size_t = size(time,2);

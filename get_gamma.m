@@ -1,6 +1,6 @@
 function [ gamma ] = get_gamma( phi, h )
 %GET_GAMMA Computes gravity given phi and h
-%   Detailed explanation goes here
+%   Depreciated in the newer versions -> hard-coded gravitational acceleration value used
 
 %   Gravity computation factors
 %{

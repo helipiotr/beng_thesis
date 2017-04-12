@@ -1,4 +1,8 @@
-%generating trajectory
+%TRAJ_GEN Function generating 8-like trajectory
+%	The function generates 8-like trajectory and adds artificial noise to
+%	test the filter robustness. It includes values important for the Kalman filter
+%	operation, and kalman_gps_ins should take care of assigning correct noise estimation 
+%	values
 
 %please mind the values coded in the Kalman filter
 acc_noise=50*10^-6*9.81;

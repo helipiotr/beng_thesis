@@ -1,5 +1,6 @@
 function [ phi ] = cal_phi( i, k, l )
 %CAL_PHI returns proper phi-value to optimise using least squares method
+%	function depreciated in the newest version
 
 i=int32(i);
 k=int32(k);
