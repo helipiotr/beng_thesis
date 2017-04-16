@@ -7,13 +7,19 @@ tspan=size_t-1;
 
 %plotting r_n trajectory, with reference 3D
 
-
+%making sure it opens in a new window
+figure 
 plot3(6*10^6*(data(1,1:tspan,1)-data(1,1,1)), ... 
     6*10^6*(data(2,1:tspan,1)-data(2,1,1)), ...
     data(3,1:tspan,1)-data(3,1,1),...
     6*10^6*(data(1,1:tspan,6)-data(1,1,6)), ... 
     6*10^6*(data(2,1:tspan,6)-data(2,1,6)), ...
     data(3,1:tspan,6)-data(3,1,6));
+title('Filtered vs raw GPS trajectory')
+ylabel('Distance [m]')
+xlabel('Distance [m]')
+zlabel('Relative altitude [m]')
+
 axis equal;
 
 

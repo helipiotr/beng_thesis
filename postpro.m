@@ -10,6 +10,11 @@ plot3(6*10^6*(data(1,1:tspan,1)-data(1,1,6)), ...
     6*10^6*(data(2,1:tspan,6)-data(2,1,6)),...
     data(3,1:tspan,6)-data(3,1,6));%+wgn(1,size_t,r_gps_noise^2,'linear'));
 axis equal
+title('Filtered trajectory')
+ylabel('Distance [m]')
+xlabel('Distance [m]')
+zlabel('Relative altitude [m]')
+
 
 x_perf=data(1,1:tspan,1)-data(1,1:tspan,6);
 x_perf=x_perf*x_perf';
@@ -33,6 +38,11 @@ plot3(6*10^6*(data(1,1:tspan,11)-data(1,1,6)), ...
     data(3,1:tspan,6) - data(3,1,6));%+wgn(1,size_t,r_gps_noise^2,'linear'));
 axis equal
 
+title('GPS trajectory')
+ylabel('Distance [m]')
+xlabel('Distance [m]')
+zlabel('Relative altitude [m]')
+
 x_perf=data(1,1:tspan,11)-data(1,1:tspan,6);
 x_perf=x_perf*x_perf';
 
@@ -41,16 +51,22 @@ y_perf=y_perf*y_perf';
 
 gps_perf=x_perf+y_perf;
 
-disp('GPS navigation performance:')
+disp('GPS navigation filtering performance:')
 disp(gps_perf);
 
 subplot(2,2,3)
 
 plot(time(1:tspan),data(3,1:tspan,1))
+title('Altitude')
+ylabel('Distance [m]')
+xlabel('Distance [m]')
 
 subplot(2,2,4)
 
 plot(time(1:tspan),data(3,1:tspan,3))
+title('Vertical velocity')
+ylabel('Distance [m]')
+xlabel('Distance [m]')
 
 %{
 plot(6*10^6*(data(1,:,1)-data(1,1,1)), ... 

@@ -82,20 +82,38 @@ attitude_mag=rad2deg(atan2(mag_n(:,2),mag_n(:,1)));
 
 attitude_gps = fillmissing(attitude_gps,'nearest');
 
-
+%making sure it plots in a new window
+figure
 subplot(2,2,1)
 plot(time,gyro_n(:,1),time,gyro_n(:,2),time,gyro_n(:,3))
+title('Gyroscope readings in the navigation frame')
+xlabel('time')
+ylabel('rad/s')
+
 subplot(2,2,2)
 plot(time,acc_n(:,1),time,acc_n(:,2),time,acc_n(:,3))
+title('Accelerometer readings in the navigation frame')
+xlabel('time')
+ylabel('m/s^2')
+
 subplot(2,2,3)
 plot(time, speed);
+title('Absolute ground velocity GPS readings')
+xlabel('time')
+ylabel('m/s')
+
 subplot(2,2,4)
-plot(time, attitude_mag, time,...
-    attitude_gps);
+plot(time, attitude_mag, time, attitude_gps);
+title('Attitude from magnetometer')
+xlabel('time')
+ylabel('deg')
 
 figure
 scatter(10^6*6*deg2rad(long-long(1)),10^6*6*deg2rad(lat-lat(1)))
 axis equal
+title('Scattered GPS data points')
+ylabel('Distance [m]')
+xlabel('Distance [m]')
 
 time = time';
 size_t = size(time,2);
@@ -113,7 +131,8 @@ data(1:3,:,7)=v_n_gps;
 
 r_n_0 = r_n_gps(:,1);
 v_n_0 = [0 0 0]';
-addpath(genpath('C:\Users\Piotr\Documents\Nauka\Praca In¿ynierska'));
+%addpath(genpath('C:\Users\Piotr\Documents\Nauka\Praca In¿ynierska'));
+%addpath()
 C_b_n=rotz(rad2deg(alpha))*rotx(rad2deg(beta))*rotz(-attitude_mag(1));
 C_n_b=C_b_n';
 q_0 = C2q(C_n_b);

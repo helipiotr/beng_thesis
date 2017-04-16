@@ -17,11 +17,14 @@ clear
 clear functions
 tic
 
-%use simulated data (8-like trajectory)
+%use simulated data (8-like trajectory)-> please change postpro 
+% / postpro_data at the bottom of this script as well!
+
 %traj_gen 
 
-%use acquired (real-life) data
-addpath(genpath('C:\Users\Piotr\Documents\Nauka\Praca In¿ynierska\data'));
+%use acquired (real-life) data 
+
+%addpath(genpath('\data'));
 data_script
 
 %assign initial values
@@ -85,5 +88,10 @@ for i=1:(size_t-1)
 end
 
 toc
+
+%post-process for simulated data
 %postpro
+
+
+%post-process for real - life data
 postpro_data
