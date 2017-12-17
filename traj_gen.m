@@ -20,7 +20,7 @@ data(:,:,1:10)=zeros(3,size_t,10);
 data_q(:,:)=zeros(4,size_t);
 
 acc_b_noise=wgn(3,size_t,acc_noise^2/ins_del_t/2,'linear')+...
-    diag(wgn(3,1,acc_bias^2))*ones(3,size_t);
+    diag(wgn(3,1,acc_bias^2,'linear'))*ones(3,size_t);
 om_b_ib_noise=wgn(3,size_t,gyro_noise^2/ins_del_t/2,'linear')/100;
 
 gps_acquired=zeros(1,size_t);
